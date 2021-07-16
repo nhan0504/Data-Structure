@@ -18,18 +18,18 @@ public:
         return 2 * i + 2;
     }
 
-    void ShiftDown(int i, vector<long long>& data_in) {
+    void ShiftDown(int i, vector<pair<int, int64_t>>& data_in) {
         int minIndex = i;
         int l = LeftChild(i);
-        if (l < data_in.size() && data_in[minIndex] > data_in[l]) {
+        if (l < data_in.size() && data_in[minIndex].second >= data_in[l].second && data_in[minIndex].first > data_in[l].first) {
             minIndex = l;
         }
         int r = RightChild(i);
-        if (r < data_in.size() && data_in[minIndex] > data_in[r]) {
+        if (r < data_in.size() && data_in[minIndex].second >= data_in[r].second && data_in[minIndex].first > data_in[l].first) {
             minIndex = r;
         }
         if (minIndex != i) {
-            swap(data_in[i], data_in[minIndex]);
+            swap(data_in[i].second, data_in[minIndex].second);
         }
         else {
             return;
@@ -37,17 +37,17 @@ public:
         ShiftDown(minIndex, data_in);
     }
 
-    long long ExtractMin(vector<long long>& data_in) {
+    pair<int, int64_t> ExtractMin(vector<pair<int, int64_t>>& data_in) {
         return data_in[0];
     }
 
-    void ChangePriority(int a, long long b, vector<long long>& data_in) {
-        data_in[a] = b;
+    void ChangePriority(int a, int64_t b, vector<pair<int, int64_t>>& data_in) {
+        data_in[a].second = b;
         swap(data_in[0], data_in[data_in.size() - 1]);
         ShiftDown(0, data_in);
     }
 
-    void BuildHeap(vector<long long>& data_in) {
+    void BuildHeap(vector<pair<int, int64_t>>& data_in) {
         for (int i = (data_in.size() - 1) / 2; i >= 0; i--) {
             ShiftDown(i, data_in);
         }
@@ -60,15 +60,11 @@ class JobQueue {
     int num_workers = 0;
     vector<int> jobs;
 
-    vector<int> assigned_workers;
-    vector<long long> start_times;
+    vector<pair<int, int64_t>> start_times;
 
     void WriteResponse() const {
-        /*for (int i = 0; i < jobs.size(); i++) {
-            cout << assigned_workers[i] << " " << start_times[i] << "\n";
-        }*/
         for (int i = 0; i < jobs.size(); i++) {
-            cout << start_times[i] << "\n";
+            cout << start_times[i].first << " " << start_times[i].second << "\n";
         }
     }
 
@@ -82,17 +78,25 @@ class JobQueue {
     }
 
     void AssignJobs() {
-        start_times.resize(num_workers);
-        vector<long long> heap_data(num_workers, 0);
         for (int i = 0; i < num_workers; i++) {
-            heap_data[i] = jobs[i];
+            start_times.push_back(make_pair(i, 0));
         }
+
+        vector<pair<int, int64_t>> heap_data;
+        for (int i = 0; i < num_workers; i++) {
+            heap_data.push_back(make_pair(i, jobs[i]));
+        }
+
         HeapBuilder Next_free_time;
         Next_free_time.BuildHeap(heap_data);
         for (int i = num_workers; i < jobs.size(); i++) {
-            long long start_time = Next_free_time.ExtractMin(heap_data);
+            for (int i = 0; i < num_workers; i++) {
+                cout << heap_data[i].first << " " << heap_data[i].second << endl;
+            }
+            cout << endl;
+            pair<int, int64_t> start_time = Next_free_time.ExtractMin(heap_data);
             start_times.push_back(start_time);
-            Next_free_time.ChangePriority(0, start_time + jobs[i], heap_data);           
+            Next_free_time.ChangePriority(0, start_time.second + jobs[i], heap_data);           
         }
     }
 
