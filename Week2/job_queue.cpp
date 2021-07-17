@@ -20,17 +20,26 @@ public:
 
     void ShiftDown(int i, vector<pair<int, int64_t>>& data_in) {
         int minIndex = i;
+
         int l = LeftChild(i);
-        if (l < data_in.size() && data_in[minIndex].second >= data_in[l].second && data_in[minIndex].first > data_in[l].first) {
+        if (l < data_in.size() && data_in[minIndex].second > data_in[l].second) {
             minIndex = l;
         }
+        else if (l < data_in.size() && data_in[minIndex].second == data_in[l].second && data_in[minIndex].first > data_in[l].first) {
+            minIndex = l;
+        }
+
         int r = RightChild(i);
-        if (r < data_in.size() && data_in[minIndex].second >= data_in[r].second && data_in[minIndex].first > data_in[l].first) {
+        if (r < data_in.size() && data_in[minIndex].second > data_in[r].second && data_in[minIndex].first > data_in[l].first) {
             minIndex = r;
         }
-        if (minIndex != i) {
-            swap(data_in[i].second, data_in[minIndex].second);
+        else if (r < data_in.size() && data_in[minIndex].second == data_in[r].second && data_in[minIndex].first > data_in[r].first) {
+            minIndex = r;
         }
+
+        if (minIndex != i) {
+            swap(data_in[i], data_in[minIndex]);
+        }     
         else {
             return;
         }
@@ -56,7 +65,7 @@ public:
 
 
 class JobQueue {
-    private:
+private:
     int num_workers = 0;
     vector<int> jobs;
 
@@ -74,7 +83,7 @@ class JobQueue {
         jobs.resize(m);
         for (int i = 0; i < m; ++i) {
             cin >> jobs[i];
-        }       
+        }
     }
 
     void AssignJobs() {
@@ -90,17 +99,13 @@ class JobQueue {
         HeapBuilder Next_free_time;
         Next_free_time.BuildHeap(heap_data);
         for (int i = num_workers; i < jobs.size(); i++) {
-            for (int i = 0; i < num_workers; i++) {
-                cout << heap_data[i].first << " " << heap_data[i].second << endl;
-            }
-            cout << endl;
             pair<int, int64_t> start_time = Next_free_time.ExtractMin(heap_data);
             start_times.push_back(start_time);
-            Next_free_time.ChangePriority(0, start_time.second + jobs[i], heap_data);           
+            Next_free_time.ChangePriority(0, start_time.second + jobs[i], heap_data);
         }
     }
 
-    public:
+public:
     void Solve() {
         ReadData();
         AssignJobs();
