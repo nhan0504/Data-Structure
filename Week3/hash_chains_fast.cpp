@@ -18,8 +18,9 @@ class QueryProcessor {
         static const size_t multiplier = 263;
         static const size_t prime = 1000000007;
         unsigned long long hash = 0;
-        for (int i = static_cast<int> (s.size()) - 1; i >= 0; i--)
+        for (int i = static_cast<int> (s.size()) - 1; i >= 0; i--) {
             hash = (hash * multiplier + s[i]) % prime;
+        }           
         return hash % bucket_num;
     }
 
@@ -56,10 +57,7 @@ public:
                 for (list<string>::iterator it = list_.begin(); it != list_.end(); it++) {
                     cout << *it << " ";
                 }
-            }
-            else {
-                cout << "\n";
-            }                
+            }            
             cout << "\n";
         } else {
             list<string>& list_ = table[hash_func(query.s)];
