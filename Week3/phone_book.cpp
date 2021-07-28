@@ -30,41 +30,55 @@ void write_responses(const vector<string>& result) {
         cout << result[i] << "\n";
     }     
 }
+void Add(int number, string name, vector<Query>& contacts) {
+    bool was_founded = false;
+    for (size_t j = 0; j < contacts.size(); j++) {
+        if (contacts[j].number == number) {
+            contacts[j].name = name;
+            was_founded = true;
+            break;
+        }
+    }
+    if (!was_founded) {
+        Query contact;
+        contact.name = name;
+        contact.number = number;
+        contacts.push_back(contact);
+    }
+}
 
+void Del(int number, vector<Query>& contacts) {
+    for (size_t j = 0; j < contacts.size(); j++) {
+        if (contacts[j].number == number) {
+            contacts.erase(contacts.begin() + j);
+            break;
+        }
+    }
+}
+
+vector<string> Find(vector<string>& result, int number, vector<Query>& contacts) {
+    string response = "not found";
+    for (size_t j = 0; j < contacts.size(); j++) {
+        if (contacts[j].number == number) {
+            response = contacts[j].name;
+            break;
+        }
+    }
+    result.push_back(response);
+    return result;
+}
 vector<string> process_queries(const vector<Query>& queries) {
     vector<string> result;
     vector<Query> contacts;
     for (size_t i = 0; i < queries.size(); i++) {
         if (queries[i].type == "add") {
-            bool was_founded = false;
-            for (size_t j = 0; j < contacts.size(); j++) {
-                if (contacts[j].number == queries[i].number) {
-                    contacts[j].name = queries[i].name;
-                    was_founded = true;
-                    break;
-                }
-            }              
-            if (!was_founded) {
-                contacts.push_back(queries[i]);
-            }
+            Add(queries[i].number, queries[i].name, contacts);
         }
         else if (queries[i].type == "del") {
-            for (size_t j = 0; j < contacts.size(); j++) {
-                if (contacts[j].number == queries[i].number) {
-                    contacts.erase(contacts.begin() + j);
-                    break;
-                }
-            }
+            Del(queries[i].number, contacts);
         }
         else {
-            string response = "not found";
-            for (size_t j = 0; j < contacts.size(); j++) {
-                if (contacts[j].number == queries[i].number) {
-                    response = contacts[j].name;
-                    break;
-                }
-            }
-            result.push_back(response);
+            result = Find(result, queries[i].number, contacts);
         }             
     }
     return result;
