@@ -42,14 +42,14 @@ int hash_func(const int& s)  {
 }
 
 void Add(Query query, vector<vector<Query>>& contacts) {
-    bool was_founded = false;
-    if (contacts[hash_func(query.number)].empty()) {
-        contacts[hash_func(query.number)].push_back(query);
+    vector<Query>& array = contacts[hash_func(query.number)];
+    if (array.empty()) {
+        array.push_back(query);
     }
     else {
-        for (size_t i = 0; i < contacts[hash_func(query.number)].size(); i++) {
-            if (query.number == contacts[hash_func(query.number)][i].number) {
-                contacts[hash_func(query.number)][i].name = query.name;
+        for (size_t i = 0; i < array.size(); i++) {
+            if (query.number == array[i].number) {
+                array[i].name = query.name;
                 break;
             }
         }
@@ -57,10 +57,11 @@ void Add(Query query, vector<vector<Query>>& contacts) {
 }
 
 void Del(Query query, vector<vector<Query>>& contacts) {
-    if (!contacts[hash_func(query.number)].empty()) {
-        for (size_t i = 0; i < contacts[hash_func(query.number)].size(); i++) {
-            if (query.number == contacts[hash_func(query.number)][i].number){
-                contacts[hash_func(query.number)].erase(contacts[hash_func(query.number)].begin() + i);
+    vector<Query>& array = contacts[hash_func(query.number)];
+    if (!array.empty()) {
+        for (vector<Query>::iterator i = array.begin(); i < array.end(); i++) {
+            if (query.number == i -> number){
+                array.erase(i);
                 break;
             }
         }
@@ -68,16 +69,15 @@ void Del(Query query, vector<vector<Query>>& contacts) {
 }
 
 vector<string> Find(vector<string>& result, Query query, vector<vector<Query>>& contacts) {
-    string response = "not found";
-    if (contacts[hash_func(query.number)].empty()) {
-        result.push_back(response);
+    vector<Query>& array = contacts[hash_func(query.number)];
+    if (array.empty()) {
+        result.push_back("not found");
         return result;
     }
     else {
-        for (size_t i = 0; i < contacts[hash_func(query.number)].size(); i++) {
-            if (query.number == contacts[hash_func(query.number)][i].number) {
-                response = contacts[hash_func(query.number)][i].name;
-                result.push_back(response);
+        for (size_t i = 0; i < array.size(); i++) {
+            if (query.number == array[i].number) {
+                result.push_back(array[i].name);
                 return result;
             }
         }
