@@ -38,7 +38,7 @@ class Buffer {
             }
             else {
                 if (finish_time.size() == size_) {
-                    if (request.arrival_time < finish_time.back()) {
+                    if (request.arrival_time < finish_time.back() && request.arrival_time < finish_time.front()) {
                         return Response(true, request.arrival_time);
                     }
                     else {
@@ -48,15 +48,23 @@ class Buffer {
                             return Response(false, request.arrival_time);
                         }
                         else {
-                            finish_time.push(finish_time.back() + request.process_time);
-                            return Response(false, finish_time.back());
+                            int start_time = finish_time.back();                       
+                            finish_time.push(start_time + request.process_time);                          
+                            return Response(false, start_time);
                         }
                     }
                 }
                 else {
-                    int start_time = finish_time.back();
-                    finish_time.push(start_time + request.process_time);
-                    return Response(false, start_time);
+                    if (request.arrival_time > finish_time.back()) {
+                        finish_time.pop();
+                        finish_time.push(request.process_time);
+                        return Response(false, request.arrival_time);
+                    }
+                    else {
+                        int start_time = finish_time.back();
+                        finish_time.push(start_time + request.process_time);
+                        return Response(false, start_time);
+                    }                 
                 }         
             }
         }
