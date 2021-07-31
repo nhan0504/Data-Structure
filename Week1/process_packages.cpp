@@ -32,41 +32,29 @@ class Buffer {
         {}
 
         Response Process(const Request &request) {
+            Response res(false, 0);
             if (finish_time.empty()) {
-                finish_time.push(request.process_time);
-                return Response(false, request.arrival_time);
+                finish_time.push(request.arrival_time + request.process_time);
+                res.start_time = request.arrival_time;
             }
             else {
-                if (finish_time.size() == size_) {
-                    if (request.arrival_time < finish_time.back() && request.arrival_time < finish_time.front()) {
-                        return Response(true, request.arrival_time);
-                    }
-                    else {
-                        finish_time.pop();
-                        if (finish_time.empty()) {
-                            finish_time.push(request.process_time);
-                            return Response(false, request.arrival_time);
-                        }
-                        else {
-                            int start_time = finish_time.back();                       
-                            finish_time.push(start_time + request.process_time);                          
-                            return Response(false, start_time);
-                        }
-                    }
+                if (request.arrival_time >= finish_time.front()) {
+                    finish_time.pop();
+                }
+
+                if (finish_time.size() == size_) {                 
+                        res.dropped = true;                 
+                }
+                else if(finish_time.empty()) {
+                    finish_time.push(request.arrival_time + request.process_time);
+                    res.start_time = request.arrival_time;                       
                 }
                 else {
-                    if (request.arrival_time > finish_time.back()) {
-                        finish_time.pop();
-                        finish_time.push(request.process_time);
-                        return Response(false, request.arrival_time);
-                    }
-                    else {
-                        int start_time = finish_time.back();
-                        finish_time.push(start_time + request.process_time);
-                        return Response(false, start_time);
-                    }                 
-                }         
+                    res.start_time = finish_time.back();
+                    finish_time.push(finish_time.back() + request.process_time);                 
+                }                
             }
+            return res;
         }
     private:
         int size_;
