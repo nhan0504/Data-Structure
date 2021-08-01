@@ -37,13 +37,8 @@ vector<string> process_queries(const vector<Query>& queries) {
     map<int, string> phonebook;
     for (size_t i = 0; i < queries.size(); i++) {
         int num = queries[i].number;
-        if (queries[i].type == "add") {
-            if (phonebook.find(num) != phonebook.end()) {
-                phonebook[num] = queries[i].name;
-            }
-            else {
-                phonebook[num] = queries[i].name;
-            }
+        if (queries[i].type == "add") {          
+                phonebook[num] = queries[i].name;          
         }
         else if (queries[i].type == "del") {
             if (phonebook.find(num) != phonebook.end()) {
