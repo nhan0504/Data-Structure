@@ -38,7 +38,6 @@ vector<string> process_queries(const vector<Query>& queries) {
     for (size_t i = 0; i < queries.size(); i++) {
         int num = queries[i].number;
         if (queries[i].type == "add") {
-            bool was_founded = false;
             if (phonebook.find(num) != phonebook.end()) {
                 phonebook[num] = queries[i].name;
             }
