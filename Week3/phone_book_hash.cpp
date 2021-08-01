@@ -34,8 +34,8 @@ void write_responses(const vector<string>& result) {
 int hash_func(const int& s)  {
     int table_size = 1000;
     static const int64_t prime = 1000000007;
-    static const uint64_t multiplier = (uint64_t)(rand() % 1000000006) + 1;
-    static const uint64_t add = rand() % 1000000006; 
+    static const uint64_t multiplier = 263;
+    static const uint64_t add = 353; 
     uint64_t hash = 0;
     hash = (s * multiplier + add) % prime;
     return hash % table_size;
