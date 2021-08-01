@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Week2\job_queue.cpp">
+    <ClCompile Include="Week4\tree-orders.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -6,10 +6,7 @@ using namespace std;
 
 class HeapBuilder {
 public:
-    int Parent(int i) {
-        return (i - 1) / 2;
-    }
-
+ 
     int LeftChild(int i) {
         return 2 * i + 1;
     }
@@ -19,38 +16,43 @@ public:
     }
 
     void ShiftDown(int i, vector<pair<int, int64_t>>& data_in) {
-        int minIndex = i;
+        int64_t minIndex = i;
 
         int l = LeftChild(i);
-        if (l < data_in.size() && data_in[minIndex].second > data_in[l].second) {
-            minIndex = l;
+        if (l < data_in.size()) {
+            if (data_in[minIndex].second > data_in[l].second) {
+                minIndex = l;
+            }
+            else if (data_in[minIndex].second == data_in[l].second && data_in[minIndex].first > data_in[l].first) {
+                minIndex = l;
+            }
         }
-        else if (l < data_in.size() && data_in[minIndex].second == data_in[l].second && data_in[minIndex].first > data_in[l].first) {
-            minIndex = l;
-        }
-
+       
         int r = RightChild(i);
-        if (r < data_in.size() && data_in[minIndex].second > data_in[r].second && data_in[minIndex].first > data_in[l].first) {
-            minIndex = r;
+        if (r < data_in.size()) {
+            if (data_in[minIndex].second > data_in[r].second && data_in[minIndex].first > data_in[l].first) {
+                minIndex = r;
+            }
+            else if (data_in[minIndex].second == data_in[r].second && data_in[minIndex].first > data_in[r].first) {
+                minIndex = r;
+            }
         }
-        else if (r < data_in.size() && data_in[minIndex].second == data_in[r].second && data_in[minIndex].first > data_in[r].first) {
-            minIndex = r;
-        }
-
+        
         if (minIndex != i) {
             swap(data_in[i], data_in[minIndex]);
+            ShiftDown(i, data_in);
         }     
-        else {
+        /*else {
             return;
-        }
-        ShiftDown(minIndex, data_in);
+        }*/
+        
     }
 
     pair<int, int64_t> ExtractMin(vector<pair<int, int64_t>>& data_in) {
         return data_in[0];
     }
 
-    void ChangePriority(int a, int64_t b, vector<pair<int, int64_t>>& data_in) {
+    void ChangePriority(int a, int b, vector<pair<int, int64_t>>& data_in) {
         data_in[a].second = b;
         swap(data_in[0], data_in[data_in.size() - 1]);
         ShiftDown(0, data_in);
@@ -67,21 +69,21 @@ public:
 class JobQueue {
 private:
     int num_workers = 0;
-    vector<int> jobs;
+    vector<int64_t> jobs;
 
-    vector<pair<int, int64_t>> start_times;
+    vector<pair<int64_t, int64_t>> start_times;
 
     void WriteResponse() const {
-        for (int i = 0; i < jobs.size(); i++) {
+        for (int64_t i = 0; i < jobs.size(); i++) {
             cout << start_times[i].first << " " << start_times[i].second << "\n";
         }
     }
 
     void ReadData() {
-        int m;
+        int64_t m;
         cin >> num_workers >> m;
         jobs.resize(m);
-        for (int i = 0; i < m; ++i) {
+        for (int64_t i = 0; i < m; ++i) {
             cin >> jobs[i];
         }
     }
