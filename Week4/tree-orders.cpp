@@ -24,26 +24,23 @@ public:
         }
     }
 
-    void in_order(int i) {   
+    void in_order(int i) {  
+        //if left child of node is nill -> print out left child
         if (left[i] != -1 && left[left[i]] == -1 && right[left[i]] == -1) {
             cout << key[left[i]] << " ";                               
         }
         else if(left[i] != -1) {
             in_order(left[i]);
         }  
-        /*if (left[i] != -1) {
-            in_order(left[i], result);
-        }*/
+        //Print out node after traversing all left subtree
         cout << key[i] << " ";
+        //if right child of node is nill -> print out right child
         if (right[i] != -1 && left[right[i]] == -1 && right[right[i]] == -1) {
             cout << key[right[i]] << " ";
         }
         else if(right[i] != -1) {
             in_order(right[i]);
         }
-        /*if (right[i] != -1) {
-            in_order(right[i], result);
-        }*/
     }
 
     void pre_order(int i) {
@@ -60,13 +57,6 @@ public:
         else if (right[i] != -1) {
             pre_order(right[i]);
         }
-
-       /* if (left[i] != -1) {
-            pre_order(left[i], result);
-        }      
-        if (right[i] != -1) {
-            pre_order(right[i], result);
-        }*/
     }
 
     void post_order(int i) {     
@@ -83,14 +73,6 @@ public:
             post_order(right[i]);
         }
        cout << key[i] << " ";
-
-       /* if (left[i] != -1) {
-            post_order(left[i], result);
-        }
-        if(right[i] != -1) {
-            post_order(right[i], result);
-        }
-        result.push_back(key[i]);*/
     }
 };
 
@@ -108,12 +90,6 @@ int main_with_large_stack_space() {
     ios_base::sync_with_stdio(0);
     TreeOrders t;
     t.read();
-   /* vector<int> in_order;
-    vector<int> pre_order;
-    vector<int> post_order;*/
-    /*print(t.in_order(0, in_order));
-    print(t.pre_order(0, pre_order));
-    print(t.post_order(0, post_order));*/
     t.in_order(0);
     cout << endl;
     t.pre_order(0);
