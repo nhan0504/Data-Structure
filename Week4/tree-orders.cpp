@@ -55,12 +55,15 @@ public:
         return result;
     }
 
-    vector <int> post_order() {
-        vector<int> result;
-        // Finish the implementation
-        // You may need to add a new recursive method to do that
-    
-        return result;
+    vector <int> post_order(int i, vector<int>& result) {     
+        if (left[i] != -1) {
+            post_order(left[i], result);
+        }
+        if(right[i] != -1) {
+            post_order(right[i], result);
+        }
+        result.push_back(key[i]);
+       return result;
     }
 };
 
@@ -80,9 +83,10 @@ int main_with_large_stack_space() {
     t.read();
     vector<int> in_order;
     vector<int> pre_order;
+    vector<int> post_order;
     print(t.in_order(0, in_order));
     print(t.pre_order(0, pre_order));
-    //print(t.post_order(0, result[2]));
+    print(t.post_order(0, post_order));
     return 0;
 }
 
