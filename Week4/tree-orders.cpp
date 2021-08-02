@@ -25,20 +25,23 @@ public:
     }
 
     vector <int> in_order(int i, vector<int>& result) {   
-        if (left[i] != -1 && left[left[i]] == -1 && right[left[i]] == -1) {
-            result.push_back(key[left[i]]);    
-            cout << key[left[i]] << endl;                             
+        /*if (left[i] != -1 && left[left[i]] == -1 && right[left[i]] == -1) {
+            result.push_back(key[left[i]]);                               
         }
         else if(left[i] != -1) {
             in_order(left[i], result);
-        }  
+        } */ 
+        if (left[i] != -1) {
+            in_order(left[i], result);
+        }
         result.push_back(key[i]);
-        cout << key[i] << endl;
-        if (right[i] != -1 && left[right[i]] == -1 && right[right[i]] == -1) {
+        /*if (right[i] != -1 && left[right[i]] == -1 && right[right[i]] == -1) {
             result.push_back(key[right[i]]);
-            cout << key[right[i]] << endl;
         }
         else if(right[i] != -1) {
+            in_order(right[i], result);
+        }*/
+        if (right[i] != -1) {
             in_order(right[i], result);
         }
         return result;
