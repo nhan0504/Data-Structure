@@ -56,10 +56,10 @@ bool IsBinarySearchTree(Node& tree) {
     }
     else {
         traverse = tree.in_order(0, traverse);
-        for (int i = 0; i < traverse.size(); i++) {
+        /*for (int i = 0; i < traverse.size(); i++) {
             cout << traverse[i] << " ";
         }
-        cout << endl;
+        cout << endl;*/
         for (int i = 0; i < tree.n; i++) {
             keys[i] = tree.key[i];
         }
