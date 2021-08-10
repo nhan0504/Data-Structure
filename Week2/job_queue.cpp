@@ -30,7 +30,7 @@ public:
        
         int r = RightChild(i);
         if (r < data_in.size()) {
-            if (data_in[minIndex].second > data_in[r].second && data_in[minIndex].first > data_in[l].first) {
+            if (data_in[minIndex].second > data_in[r].second) {
                 minIndex = r;
             }
             else if (data_in[minIndex].second == data_in[r].second && data_in[minIndex].first > data_in[r].first) {
@@ -94,16 +94,29 @@ private:
         }
 
         vector<pair<int, int64_t>> heap_data;
-        for (int i = 0; i < num_workers; i++) {
-            heap_data.push_back(make_pair(i, jobs[i]));
+        if (num_workers <= jobs.size()) {
+            for (int i = 0; i < num_workers; i++) {
+                heap_data.push_back(make_pair(i, jobs[i]));
+            }
         }
+        else {
+            for (int i = 0; i < jobs.size(); i++) {
+                heap_data.push_back(make_pair(i, jobs[i]));
+            }
+        }
+        
 
         HeapBuilder Next_free_time;
-        Next_free_time.BuildHeap(heap_data);
-        for (int i = num_workers; i < jobs.size(); i++) {
-            pair<int, int64_t> start_time = Next_free_time.ExtractMin(heap_data);
-            start_times.push_back(start_time);
-            Next_free_time.ChangePriority(0, start_time.second + jobs[i], heap_data);
+        Next_free_time.BuildHeap(heap_data);     
+        if (num_workers <= jobs.size()) {
+            for (int i = num_workers; i < jobs.size(); i++) {
+                pair<int, int64_t> start_time = Next_free_time.ExtractMin(heap_data);
+                start_times.push_back(start_time);
+                Next_free_time.ChangePriority(0, start_time.second + jobs[i], heap_data);
+            }
+        }
+        else {
+            return;
         }
     }
 
