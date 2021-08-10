@@ -59,7 +59,7 @@ public:
     }
 
     void BuildHeap(vector<pair<int, int64_t>>& data_in) {
-        for (int i = (data_in.size() - 1) / 2; i >= 0; i--) {
+        for (int i = (data_in.size() - 2) / 2; i >= 0; i--) {
             ShiftDown(i, data_in);
         }
     }
